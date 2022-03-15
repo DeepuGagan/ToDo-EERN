@@ -21,14 +21,14 @@ const App = () => {
   }, [])
 
   const getBackend = async () => {
-    const response = await axios.get('http://localhost:1000/backend')
+    const response = await axios.get('http://localhost:2000/backend')
     return response.data
   }
 
 
   const addTodos = async (textFromInput) => {
     const requestBody = { id: Date.now(), input: textFromInput, status: false }
-    await axios.post(`http://localhost:1000/backend/${requestBody.id}`, requestBody)
+    await axios.post(`http://localhost:2000/backend/${requestBody.id}`, requestBody)
     setTodos((prev) => [...prev, requestBody])
   }
 
@@ -40,13 +40,13 @@ const App = () => {
     })
     let index = changedTodo.findIndex((f) => f.id === objectFromTodo.id)
     const requestBody = changedTodo[index]
-    await axios.put(`http://localhost:1000/backend/${objectFromTodo.id}`, requestBody)
+    await axios.post(`http://localhost:2000/backend/${objectFromTodo.id}`, requestBody)
     setTodos(changedTodo)
   }
 
   const deleteTodo = async (idFromTodo) => {
     const todoRemains = todos.filter((todo) => todo.id !== idFromTodo)
-    await axios.delete(`http://localhost:1000/backend/${idFromTodo}`)
+    await axios.delete(`http://localhost:2000/backend/${idFromTodo}`)
     setTodos(todoRemains)
   }
 
