@@ -1,5 +1,6 @@
 //essentials
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 //css
 import './App.css';
 //components
@@ -11,20 +12,41 @@ import TodoList from './components/TodoList';
 const App = () => {
   const [todos, setTodos] = useState([])
 
-  const addTodos = (textFromInput) => {
-    setTodos((prev) => [...prev, { id: Date.now(), input: textFromInput, status: false }])
+  useEffect(() => {
+    const backendData = async () => {
+      const forTodos = await getBackend()
+      setTodos(forTodos)
+    }
+    backendData()
+  }, [])
+
+  const getBackend = async () => {
+    const response = await axios.get('http://localhost:1000/backend')
+    return response.data
   }
 
-  const editOrSaveTodo = (objectFromTodo) => {
+
+  const addTodos = async (textFromInput) => {
+    const requestBody = { id: Date.now(), input: textFromInput, status: false }
+    await axios.post(`http://localhost:1000/backend/${requestBody.id}`, requestBody)
+    setTodos((prev) => [...prev, requestBody])
+  }
+
+  const editOrSaveTodo = async (objectFromTodo) => {
     const changedTodo = todos.map((todo) => {
       if (todo.id === objectFromTodo.id) {
         return { ...todo, ...objectFromTodo }
       } else return todo
     })
+    let index = changedTodo.findIndex((f) => f.id === objectFromTodo.id)
+    const requestBody = changedTodo[index]
+    await axios.put(`http://localhost:1000/backend/${objectFromTodo.id}`, requestBody)
     setTodos(changedTodo)
   }
-  const deleteTodo = (idFromTodo) => {
+
+  const deleteTodo = async (idFromTodo) => {
     const todoRemains = todos.filter((todo) => todo.id !== idFromTodo)
+    await axios.delete(`http://localhost:1000/backend/${idFromTodo}`)
     setTodos(todoRemains)
   }
 
