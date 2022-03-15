@@ -7,6 +7,7 @@ import './App.css';
 import Header from './components/Header';
 import Input from './components/Input';
 import TodoList from './components/TodoList';
+import SearchTodo from './components/SearchTodo';
 
 
 const App = () => {
@@ -50,11 +51,23 @@ const App = () => {
     setTodos(todoRemains)
   }
 
+  const searchTodo = (searchText) => {
+    if(searchText ==='') setTodos(todos)
+    else {
+      const searchResult = todos.filter((todo)=> todo.input.includes(searchText))
+      setTodos(searchResult)
+    }
+  }
+
   return (
     <div className="App">
-      <Header />
-      <Input addFunc={addTodos} />
-      <TodoList todos={todos} changeFunc={editOrSaveTodo} deleteFunc={deleteTodo} />
+      <div>
+        <Header />
+        <Input addFunc={addTodos} />
+        <SearchTodo searchFunc={searchTodo} />
+        <TodoList todos={todos} changeFunc={editOrSaveTodo} deleteFunc={deleteTodo} />
+      </div>
+
     </div>
   );
 }
